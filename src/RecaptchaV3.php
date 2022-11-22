@@ -116,17 +116,21 @@ class RecaptchaV3
      */
     public function field($action, $name = 'g-recaptcha-response')
     {
-        $fieldId = uniqid($name . '-', false);
-        $html = '<input type="hidden" name="' . $name . '" id="' . $fieldId . '">';
-        $html .= "<script>
-  grecaptcha.ready(function() {
-      grecaptcha.execute('" . $this->sitekey . "', {action: '" . $action . "'}).then(function(token) {
-         document.getElementById('" . $fieldId . "').value = token;
-      });
-  });
-  </script>";
+        $html = '<input type="hidden" name="' . $name . '" id="g-recaptcha-'. $action . '">';
         return $html;
     }
 
-
+    /**
+     * @return string
+     */
+    public function script($action)
+    {
+        return "<script>
+            grecaptcha.ready(function() {
+                grecaptcha.execute('" . $this->sitekey . "', {action: '" . $action . "'}).then(function(token) {
+                    document.getElementById('g-recaptcha-" . $action . "').value = token;
+                });
+            });
+        </script>";
+    }
 }
